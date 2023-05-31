@@ -15,7 +15,7 @@ var (
 func main() {
 
 	r := gin.Default()
-	r.LoadHTMLGlob("template/*.html")
+	r.LoadHTMLGlob("/template/*.html")
 	r.GET("/dolrigo/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong from dolrigo",
