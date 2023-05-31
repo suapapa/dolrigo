@@ -9,9 +9,9 @@ type Game struct {
 }
 
 type Candidate struct {
-	Name    string `json:"name"`
-	EMail   string `json:"email"`
-	Picture string `json:"picture"`
+	Name  string `json:"name"`
+	EMail string `json:"email"`
+	Photo string `json:"photo"`
 }
 
 func NewGame() *Game {
@@ -21,5 +21,12 @@ func NewGame() *Game {
 }
 
 func (g *Game) AddCandidate(c *Candidate) {
+	// 중복 체크
+	for _, v := range g.Candidates {
+		if v.EMail == c.EMail {
+			return
+		}
+	}
+
 	g.Candidates = append(g.Candidates, c)
 }
