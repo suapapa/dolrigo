@@ -9,10 +9,10 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <div id="g_id_onload"
-     data-client_id="340420184719-6s9f9t49o3nme4lu1f52vjnh3tmerptb.apps.googleusercontent.com"
+     data-client_id="{{ .ClientID }}"
      data-context="signin"
      data-ux_mode="popup"
-     data-login_uri="https://homin.dev/dolrigo/login"
+     data-login_uri="https://homin.dev/{{ .subpath }}{{ .GID }}/sse"
      data-auto_select="true"
      data-itp_support="true">
 </div>
