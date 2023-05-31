@@ -1,0 +1,81 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Spinning Wheel</title>
+	<link rel="stylesheet" type="text/css" href="spin_wheel.css" />
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/d3.v3.js"></script>
+	<script type="text/javascript" src="spin_wheel.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(
+			function () {
+				// get current path
+				var path = window.location.pathname;
+
+				// https://homin.dev/dolrigo/static/ -> https://homin.dev/dolrigo/cadidates
+				const candidate_path = change_path(path, 'candidates');
+
+				// get candidates
+				$.ajax({
+					url: candidate_path,
+					type: "GET",
+					dataType: "json",
+					success: function (data) {
+						var items = data;
+						prepare_photo(items);
+						prepare_wheel(items);
+						toggle_photo(items);
+
+						$("#spin").bind(
+							"click",
+							function (event) {
+								var wheel_speed = Math.random() * 30 + 60; // 50 ms 동안 몇 도를 회전하는가(180 미만)
+								spin_wheel(items, wheel_speed);
+							}
+						);
+					}
+				});
+			}
+		);
+
+		function prepare_photo(items) {
+			var container = $("#photo_container");
+
+			jQuery.each(
+				items,
+				function (i, d) {
+					container.append($("<img></img>").addClass("photo").attr("src", d.photo).data(d));
+				}
+			);
+		}
+
+		function change_path(originalPath, targetDirectory) {
+			const trimmedPath = originalPath.replace(/\/+$/, '');
+			const pathSegments = trimmedPath.split('/');
+			pathSegments[pathSegments.length - 1] = targetDirectory;
+
+			const modifiedPath = pathSegments.join('/');
+			const finalPath = modifiedPath + '/';
+
+			return finalPath;
+		}
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<div>
+			<img src="img/arrow.jpg" style="margin-left: 288px; width: 24px; height: 24px;" />
+			<input id="spin" type="button" value="돌리기" />
+		</div>
+		<div id="wheel_container"></div>
+		<div id="photo_container"></div>
+	</div>
+</body>
+
+</html>

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 
@@ -16,12 +17,11 @@ type ClientChan chan string
 var (
 	subPath     string
 	templateDir string
-	survyeID    = "1P_Myt5-7aRncmZ2AJwC0UwhkmEAEqxCdJpUxhjmp_SM"
 )
 
 func main() {
-	flag.StringVar(&subPath, "p", "/", "subpath")
-	flag.StringVar(&templateDir, "t", "template", "template dir")
+	flag.StringVar(&subPath, "p", "/", "subpath")                 // dolrigo
+	flag.StringVar(&templateDir, "t", "template", "template dir") // -t /template
 	flag.Parse()
 
 	if !strings.HasSuffix(subPath, "/") {
@@ -36,20 +36,20 @@ func main() {
 			"message": "pong from dolrigo",
 		})
 	})
-	r.GET(subPath+":gid/join", func(c *gin.Context) {
-		gid := c.Param("gid")
+	r.GET(subPath+"join/", func(c *gin.Context) {
+		// gid := "2023" // c.Param("gid")
 		type JoinData struct {
-			GID      string
+			// GID      string
 			ClientID string
 			SubPath  string
 		}
 		c.HTML(http.StatusOK, "join.html", &JoinData{
-			GID:      gid,
+			// GID:      gid,
 			SubPath:  subPath,
-			ClientID: "340420184719-6s9f9t49o3nme4lu1f52vjnh3tmerptb.apps.googleusercontent.com",
+			ClientID: os.Getenv("CLIENT_ID"),
 		})
 	})
-	r.POST(subPath+":gid/sse", func(c *gin.Context) {
+	r.POST(subPath+"login/", func(c *gin.Context) {
 		p, err := idtoken.Validate(c.Request.Context(), c.PostForm("credential"), "")
 		if err != nil {
 			c.String(500, "Internal Server Error 2")
@@ -60,25 +60,31 @@ func main() {
 			log.Println(k, v)
 		}
 		user := &Candidate{
-			Name:    p.Claims["name"].(string),
-			EMail:   p.Claims["email"].(string),
-			Picture: p.Claims["picture"].(string),
+			Name:  p.Claims["name"].(string),
+			EMail: p.Claims["email"].(string),
+			Photo: p.Claims["picture"].(string),
 		}
 
-		gid := c.Param("gid")
+		gid := "2023" // c.Param("gid")
 		if _, ok := Games[gid]; !ok {
 			Games[gid] = NewGame()
 		}
 		game := Games[gid]
 		game.AddCandidate(user)
+
+		c.JSON(200, user)
 	})
-	r.GET(subPath+":gid/spin", func(c *gin.Context) {
-		gid := c.Param("gid")
+	r.GET(subPath+"candidates/", func(c *gin.Context) {
+		gid := "2023" // c.Param("gid")
 		if _, ok := Games[gid]; !ok {
 			Games[gid] = NewGame()
 		}
 		game := Games[gid]
-		c.JSON(200, game)
+		c.JSON(200, game.Candidates)
+	})
+	r.StaticFS(subPath+"static", http.Dir("/static"))
+	r.GET(subPath, func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "static/index.html")
 	})
 
 	r.Run(":8080") // listen and serve on

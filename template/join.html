@@ -6,13 +6,22 @@
 </head>
 
 <body>
+    <p>
+        <h2>개발자 노가리 방 20203 전반기 워크샾 돌려돌려 돌림판</h2>
+        <ul>
+            <li>이름, 이메일, 아바타정보를 수집합니다.</li>
+            <li>워크샾이 끝나면 수집된 데이터를 파기합니다.</li>
+        </ul>
+
+    </p>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <div id="g_id_onload"
      data-client_id="{{ .ClientID }}"
      data-context="signin"
      data-ux_mode="popup"
-     data-login_uri="https://homin.dev/{{ .subpath }}{{ .GID }}/sse"
+     data-login_uri="https://homin.dev/{{ .SubPath }}login"
      data-auto_select="true"
      data-itp_support="true">
 </div>
@@ -26,7 +35,7 @@
      data-logo_alignment="left">
 </div>
 
-<div class="g_id_signout">Sign Out</div>
-</body>
+<!-- <div class="g_id_signout">Sign Out</div>
+</body> -->
 
 </html>
