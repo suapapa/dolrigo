@@ -1,0 +1,10 @@
+#container { width: 1000px; height: 600px; }
+
+#wheel_container { float: left; width: 600px; height: 600px; }
+#wheel_container .title text { stroke: lightgray; stroke-width: 1px; fill: white; font-size: 30px; }
+#wheel_container .arc path { stroke: white; }
+#wheel_container .arc text { stroke: white; stroke-width: 1px; fill: none; writing-mode: tb; }
+
+#photo_container { float: right; width: 390px; height: 600px; }
+#photo_container .photo { position: absolute; padding-left: 145px; padding-top: 180px; display: none; width: 320px; height: 290px;}
+#photo_container .photo.focused { display: initial; }
