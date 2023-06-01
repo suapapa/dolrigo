@@ -73,7 +73,7 @@ func main() {
 		game := Games[gid]
 		game.AddCandidate(user)
 
-		c.String(200, fmt.Sprintf("%s 돌림판에 참여하셨습니다.", user.Name))
+		c.String(200, fmt.Sprintf("%s 돌림판에 %s 이(가) 참여하셨습니다.", gid, user.Name))
 	})
 	r.DELETE(subPath+"candidates/:gid/:email", func(c *gin.Context) {
 		gid := c.Param("gid")
@@ -94,8 +94,8 @@ func main() {
 		c.JSON(200, game.Candidates)
 	})
 	r.StaticFS(subPath+"static", http.Dir("/static"))
-	r.GET(subPath, func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "static/index.html")
+	r.GET(subPath+"/:gid", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "static/spin_wheel.html?gid="+c.Param("gid"))
 	})
 
 	r.Run(":8080") // listen and serve on
