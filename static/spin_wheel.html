@@ -20,8 +20,8 @@
 				const searchParams = url.searchParams;
 				const q = searchParams.get("gid");
 
-				// https://homin.dev/dolrigo/static/ -> https://homin.dev/dolrigo/cadidates/:gid
-				const candidate_path = change_path(path, 'candidates') + "/" + q;
+				// https://homin.dev/dolrigo/static/spin_wheel.html -> https://homin.dev/dolrigo/cadidates/:gid
+				const candidate_path = change_path(path, 'candidates') + q;
 
 				// get candidates
 				$.ajax({
@@ -59,7 +59,7 @@
 
 		function change_path(originalPath, targetDirectory) {
 			const trimmedPath = originalPath.replace(/\/+$/, '');
-			const pathSegments = trimmedPath.split('/');
+			const pathSegments = trimmedPath.split('/').slice(0, -1);
 			pathSegments[pathSegments.length - 1] = targetDirectory;
 
 			const modifiedPath = pathSegments.join('/');
