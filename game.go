@@ -30,3 +30,12 @@ func (g *Game) AddCandidate(c *Candidate) {
 
 	g.Candidates = append(g.Candidates, c)
 }
+
+func (g *Game) RemoveCandidate(email string) {
+	for i, v := range g.Candidates {
+		if v.EMail == email {
+			g.Candidates = append(g.Candidates[:i], g.Candidates[i+1:]...)
+			return
+		}
+	}
+}

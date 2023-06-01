@@ -16,9 +16,10 @@
 			function () {
 				// get current path
 				var path = window.location.pathname;
+				const gid = location.searchParams.get('gid');
 
-				// https://homin.dev/dolrigo/static/ -> https://homin.dev/dolrigo/cadidates
-				const candidate_path = change_path(path, 'candidates');
+				// https://homin.dev/dolrigo/static/ -> https://homin.dev/dolrigo/cadidates/:gid
+				const candidate_path = change_path(path, 'candidates') + gid;
 
 				// get candidates
 				$.ajax({
