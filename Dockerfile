@@ -10,7 +10,7 @@ WORKDIR /build
 RUN go build -ldflags "-X main.programVer=${PROGRAM_VER}" -o /build/app
 
 # ---
-FROM alpine:3.14
+FROM scratch
 
 WORKDIR /bin
 
