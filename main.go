@@ -75,6 +75,19 @@ func main() {
 
 		c.String(200, fmt.Sprintf("%s 돌림판에 %s 이(가) 참여하셨습니다.", gid, user.Name))
 	})
+	r.GET(subPath+"candidates/:gid", func(c *gin.Context) {
+		gid := c.Param("gid")
+		if _, ok := Games[gid]; !ok {
+			Games[gid] = NewGame()
+		}
+		game := Games[gid]
+		c.JSON(200, game.Candidates)
+	})
+	r.DELETE(subPath+"candidates/:gid", func(c *gin.Context) {
+		gid := c.Param("gid")
+		Games[gid] = NewGame()
+		c.String(200, fmt.Sprintf("%s 돌림판이 초기화 되었습니다.", gid))
+	})
 	r.DELETE(subPath+"candidates/:gid/:email", func(c *gin.Context) {
 		gid := c.Param("gid")
 		email := c.Param("email")
@@ -85,18 +98,12 @@ func main() {
 		game.RemoveCandidate(email)
 		c.String(200, fmt.Sprintf("%s 돌림판에서 %s 이(가) 제외되었습니다.", gid, email))
 	})
-	r.GET(subPath+"candidates/:gid", func(c *gin.Context) {
-		gid := c.Param("gid")
-		if _, ok := Games[gid]; !ok {
-			Games[gid] = NewGame()
-		}
-		game := Games[gid]
-		c.JSON(200, game.Candidates)
-	})
 	r.StaticFS(subPath+"static", http.Dir("/static"))
-	r.GET(subPath+"/:gid", func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "static/spin_wheel.html?gid="+c.Param("gid"))
-	})
+
+	// 이거 안됨
+	// r.GET(subPath+"/:gid", func(c *gin.Context) {
+	// 	c.Redirect(http.StatusMovedPermanently, "static/spin_wheel.html?gid="+c.Param("gid"))
+	// })
 
 	r.Run(":8080") // listen and serve on
 }
